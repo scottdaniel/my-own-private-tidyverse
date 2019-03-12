@@ -1,0 +1,128 @@
+---
+title: "Tidyverse_titanic"
+author: "Scott G Daniel, PennCHOP Microbiome Center"
+date: "3/12/2019"
+output: 
+  html_document:
+    toc: TRUE
+    toc_depth: 3
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r packages, include=FALSE}
+library(tidyverse)
+```
+
+# Titanic dataset
+
+## Starting
+
+```{r loading}
+
+
+passengers <- read.csv("train.csv")
+
+```
+
+### Summarize titanic using a pipe
+
+```{r}
+passengers %>%
+  summary()
+
+
+```
+### Summarize titanic after dropping na
+
+```{r}
+
+passengers %>%
+  drop_na() %>%
+  summary()
+```
+
+## Filter
+
+### Males
+
+```{r}
+passengers %>%
+  filter(Sex == "male") %>%
+  drop_na() %>%
+  head()
+```
+### Females
+
+```{r}
+passengers %>%
+  filter(Sex == "female") %>%
+  drop_na() %>%
+  head()
+```
+## Arrange
+
+### By fare (ascending)
+```{r}
+passengers %>%
+  arrange(Fare)%>%
+  drop_na() %>%
+  head()
+```
+
+### By fare (descending)
+```{r}
+passengers %>%
+  arrange(desc(Fare))%>%
+  drop_na() %>%
+  head()
+```
+
+## Mutate
+
+### Create new column FamSize (size of family)
+
+```{r}
+passengers %>%
+  mutate(FamSize = Parch + SibSp)%>%
+  drop_na() %>%
+  arrange(desc(FamSize)) %>%
+  head()
+```
+
+### Turn numerical values of Survived column to "No" & "Yes" (new data frame)
+
+```{r}
+passengers1 <- passengers %>%
+  mutate(Survived = if_else(Survived == 0, "No", "Yes")) 
+
+head(passengers1)
+```
+
+## Goodness-Gracious-Plotting
+
+### Plot barplot of passenger Sex
+
+```{r}
+ggplot(passengers, aes(x = Sex)) +
+  geom_bar()
+```
+
+### Scatter plot of Age vs Fare and colored by Sex
+
+```{r}
+ggplot(passengers, aes(x = Age, y = Fare, color = Sex)) +
+  geom_point()
+```
+
+### Scatter plot of Age vs Fare colored by Sex faceted by Survived
+
+```{r}
+ggplot(passengers1, aes(x = Age, y = Fare, color = Sex)) +
+  geom_point() +
+  facet_grid(~Survived)
+```
+
+
