@@ -127,4 +127,54 @@ ggplot(aes(x = Age, y = Fare, color = Sex)) +
   facet_grid(~Survived)
 ```
 
+### Plot barplot of passenger Sex & fill according to Survival
+```{r}
+passengers1 %>%
+  drop_na() %>%
+  ggplot(aes(x = Sex, fill = Survived)) +
+  geom_bar()
+```
+
+## Summarise and group
+
+### summarise()
+
+```{r}
+# Check out mean Fare
+passengers %>%
+  summarise(meanFare = mean(Fare))
+
+# Check out median Fare
+passengers %>%
+  summarise(medianFare = median(Fare))
+
+# Check out mean Fare for men
+passengers %>%
+  filter(Sex == "male") %>%
+  summarise(meanFare = mean(Fare))
+
+# Check out mean Fare & number of survivors for women
+passengers %>%
+  filter(Sex == "female") %>%
+  summarise(meanFare = mean(Fare), numSurv = sum(Survived))
+
+```
+
+### group_by() and summarise()
+
+```{r}
+# Check out mean Fare & number of survivors grouped by Sex
+passengers %>%
+  group_by(Sex) %>%
+  summarise(meanFare = mean(Fare), numSurv = sum(Survived))
+
+#and when you ungroup
+passengers %>%
+  group_by(Sex) %>%
+  summarise(meanFare = mean(Fare), numSurv = sum(Survived)) %>%
+  ungroup() %>%
+  summarise(meanMeans = mean(meanFare))
+```
+
+
 
